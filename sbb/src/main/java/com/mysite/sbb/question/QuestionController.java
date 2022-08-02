@@ -1,6 +1,8 @@
 package com.mysite.sbb.question;
 
 import java.util.List;
+import javax.validation.Valid;
+import org.springframework.validation.BindingResult;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,8 +38,11 @@ public class QuestionController {
     	return "question_form";
     }
     @PostMapping("/create")
-    public String questionCreate(@RequestParam String subject, @RequestParam String content) {
-    	this.questionService.create(subject,  content);
+    public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult) {
+    	if (bindingResult.hasErrors()) {
+    		return "question_forms";
+    	}
+    	this.questionService.create(questionForm.getSubject(), questionForm.getContent());
     	return "redirect:/question/list";// 질문 저장후 질문 목록으로 이동
     }
 }
